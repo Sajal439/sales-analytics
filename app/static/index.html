@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Analytics Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="dark-theme">
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Authenticating & Fetching Data...</p>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar / Header area -->
+        <header class="top-nav">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Sales Analyzer</h1>
+            </div>
+            <div class="nav-controls">
+                <span id="tenant-status" class="status-badge"><span class="dot"></span>Live Demo</span>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card glass">
+                <span class="kpi-label">Total Revenue (30d)</span>
+                <h2 id="kpi-revenue" class="kpi-value">--</h2>
+                <span id="kpi-growth" class="kpi-trend">--</span>
+            </div>
+            <div class="kpi-card glass">
+                <span class="kpi-label">Total Orders</span>
+                <h2 id="kpi-orders" class="kpi-value">--</h2>
+            </div>
+            <div class="kpi-card glass">
+                <span class="kpi-label">Top Category</span>
+                <h2 id="kpi-category" class="kpi-value text-gradient">--</h2>
+            </div>
+            <div class="kpi-card glass">
+                <span class="kpi-label">Top Product</span>
+                <h2 id="kpi-product" class="kpi-value text-gradient">--</h2>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="content-grid">
+            
+            <!-- Left Column: Charts -->
+            <div class="charts-column">
+                <div class="card glass chart-card">
+                    <div class="card-header">
+                        <h3>Revenue & Forecast Trend</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card glass chart-card">
+                    <div class="card-header">
+                        <h3>Category Breakdown</h3>
+                    </div>
+                    <div class="chart-container donut-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Lists -->
+            <div class="lists-column">
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3>Top Products</h3>
+                    </div>
+                    <ul id="top-products-list" class="item-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3>Dead / Slow Stock</h3>
+                        <span class="badge-danger">Action Needed</span>
+                    </div>
+                    <ul id="slow-products-list" class="item-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

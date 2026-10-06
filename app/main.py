@@ -8,6 +8,8 @@ import logging
 import time
 
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -94,6 +96,17 @@ app.include_router(auth.router)
 app.include_router(analytics.router)
 app.include_router(forecast.router)
 app.include_router(sales.router)
+
+
+# ---------------------------------------------------------------------------
+# Frontend Dashboard
+# ---------------------------------------------------------------------------
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+@app.get("/", include_in_schema=False)
+async def serve_dashboard():
+    return FileResponse("app/static/index.html")
 
 
 # ---------------------------------------------------------------------------
