@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: sales-analytics-api
+    env: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sales-analytics-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: '["*"]'
+      - key: REDIS_URL
+        value: memory://
+
+  - type: psql
+    name: sales-analytics-db
+    plan: free
