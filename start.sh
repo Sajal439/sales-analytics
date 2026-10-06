@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export PYTHONPATH=/app
+
 echo "Running Alembic migrations..."
 alembic upgrade head || echo "Migrations failed or skipped."
 
