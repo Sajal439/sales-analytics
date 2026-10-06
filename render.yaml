@@ -1,7 +1,7 @@
 services:
   - type: web
     name: sales-analytics-api
-    env: docker
+    runtime: docker
     plan: free
     healthCheckPath: /health
     envVars:
@@ -15,7 +15,7 @@ services:
         value: '["*"]'
       - key: REDIS_URL
         value: memory://
-
-  - type: postgres
-    name: sales-analytics-db
+databases:
+  - name: sales-analytics-db
     plan: free
+    ipAllowList: []
