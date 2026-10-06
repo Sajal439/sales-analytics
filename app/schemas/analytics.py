@@ -32,6 +32,15 @@ class TopProduct(BaseModel):
     total_quantity: int
 
 
+class SlowMovingProduct(BaseModel):
+    """Product with low or zero sales."""
+
+    product_name: str
+    category: str
+    total_revenue: float
+    total_quantity: int
+
+
 class CategoryBreakdown(BaseModel):
     """Revenue share for a single category."""
 

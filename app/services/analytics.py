@@ -232,3 +232,49 @@ def get_category_breakdown(db: Session, tenant_id: int, days: int = 30) -> list[
         }
         for _, row in grouped.iterrows()
     ]
+
+
+def get_slow_moving_products(
+    db: Session, tenant_id: int, days: int = 30, threshold: int = 0
+) -> list[dict]:
+    """Products with sales quantity <= threshold in the given period (including 0 sales)."""
+    cutoff = _utcnow_naive() - timedelta(days=days)
+
+    # Subquery for sales in the period
+    sales_subq = (
+        db.query(
+            Sale.product_id,
+            func.sum(Sale.quantity).label("total_quantity"),
+            func.sum(Sale.total_amount).label("total_revenue")
+        )
+        .filter(Sale.tenant_id == tenant_id)
+        .filter(Sale.sale_date >= cutoff)
+        .group_by(Sale.product_id)
+        .subquery()
+    )
+
+    # Main query: all products for tenant, outer joined with the sales subquery
+    rows = (
+        db.query(
+            Product.name.label("product_name"),
+            Category.name.label("category_name"),
+            func.coalesce(sales_subq.c.total_quantity, 0).label("total_quantity"),
+            func.coalesce(sales_subq.c.total_revenue, 0).label("total_revenue"),
+        )
+        .join(Category, Product.category_id == Category.id)
+        .outerjoin(sales_subq, Product.id == sales_subq.c.product_id)
+        .filter(Product.tenant_id == tenant_id)
+        .filter(func.coalesce(sales_subq.c.total_quantity, 0) <= threshold)
+        .order_by(func.coalesce(sales_subq.c.total_quantity, 0).asc())
+        .all()
+    )
+
+    return [
+        {
+            "product_name": row.product_name,
+            "category": row.category_name,
+            "total_revenue": round(float(row.total_revenue), 2),
+            "total_quantity": int(row.total_quantity),
+        }
+        for row in rows
+    ]

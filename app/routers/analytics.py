@@ -10,12 +10,14 @@ from app.schemas.analytics import (
     KPISummary,
     RevenueTrendPoint,
     TopProduct,
+    SlowMovingProduct,
 )
 from app.services.analytics import (
     get_category_breakdown,
     get_kpi_summary,
     get_revenue_trend,
     get_top_products,
+    get_slow_moving_products,
 )
 
 router = APIRouter(
@@ -68,3 +70,14 @@ def category_breakdown(
 ):
     """Revenue share by category."""
     return get_category_breakdown(db, tenant_id, days=days)
+
+
+@router.get("/slow-moving-products", response_model=list[SlowMovingProduct])
+def slow_moving_products(
+    threshold: int = Query(0, ge=0, description="Max quantity sold to be considered slow-moving"),
+    days: int = Query(30, ge=1, le=365),
+    db: Session = Depends(get_db),
+    tenant_id: int = Depends(decode_token),
+):
+    """Products with sales quantity <= threshold (defaults to 0 for dead stock)."""
+    return get_slow_moving_products(db, tenant_id, days=days, threshold=threshold)
