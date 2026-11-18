@@ -17,7 +17,7 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.routers import analytics, auth, forecast, health, sales
+from app.routers import analytics, auth, forecast, health, sales, ai_insights
 from app.routers.auth import limiter
 
 # ---------------------------------------------------------------------------
@@ -96,6 +96,7 @@ app.include_router(auth.router)
 app.include_router(analytics.router)
 app.include_router(forecast.router)
 app.include_router(sales.router)
+app.include_router(ai_insights.router)
 
 
 # ---------------------------------------------------------------------------

@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     # CORS configuration
     CORS_ORIGINS: list[str] = ["*"]
 
+    # Google Generative AI — required for /ai/insights
+    # Get a free key at https://aistudio.google.com/app/apikey
+    GOOGLE_API_KEY: str | None = None
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 
